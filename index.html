@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- WhatsApp Preview Meta Tags -->
     <title>Shambhavi's Annaprashan Invitation</title>
     <meta property="og:title" content="Shambhavi's Annaprashan Invitation 🌸">
     <meta property="og:description" content="✉️ Tap to open your interactive invitation envelope and view the venue location!">
@@ -68,14 +67,8 @@
             color: var(--btn-color);
         }
 
-        @keyframes slowRotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        @keyframes slowRotateReverse {
-            0% { transform: rotate(360deg); }
-            100% { transform: rotate(0deg); }
-        }
+        @keyframes slowRotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes slowRotateReverse { 0% { transform: rotate(360deg); } 100% { transform: rotate(0deg); } }
 
         .bg-sparkle {
             position: absolute;
@@ -93,27 +86,26 @@
             100% { transform: translateY(-10vh) scale(1.4); opacity: 0; }
         }
 
-        /* Main Container: Forces exact dead-center alignment horizontally & vertically */
+        /* Fixed Container with perfect baseline padding alignment for mobile screen stacks */
         .container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-end; /* Dynamically grounds the envelope container base */
             width: 100%;
             height: 100%;
+            padding-bottom: 8vh; /* Keeps it perfectly clear of mobile browser address footers */
             box-sizing: border-box;
             z-index: 5;
             position: relative;
         }
 
-        /* Fixed absolute pixel sizing to keep it uniform across tablets & phones */
         .envelope-wrapper {
             position: relative;
             width: 320px;
             height: 220px;
             cursor: pointer;
-            margin: 0 auto; /* Removed all top margins to force exact centering */
-            transition: transform 0.3s ease;
+            transition: transform 0.4s ease;
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -127,7 +119,7 @@
             box-shadow: 0 15px 35px rgba(196,98,116,0.3);
         }
 
-        /* Responsive nested card container */
+        /* Fixed presentation card position properties */
         .card-container {
             display: none; 
             position: absolute;
@@ -143,6 +135,7 @@
             opacity: 0;
             transform: translateY(10px) scale(0.9);
             pointer-events: none;
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
         }
 
         .invitation-img {
@@ -167,10 +160,8 @@
             padding: 12px 24px;
             border-radius: 25px;
             box-shadow: 0 5px 15px rgba(196,98,116,0.4);
-            white-space: nowrap;
         }
 
-        /* Responsive Clip Path Flaps */
         .envelope-front {
             position: absolute;
             width: 100%;
@@ -193,7 +184,6 @@
             transition: transform 0.5s ease, z-index 0.2s ease;
         }
 
-        /* Centered Seal Sticker Layout */
         .heart-seal {
             position: absolute;
             top: 43%;
@@ -249,12 +239,9 @@
             animation: subtleBounce 2s infinite ease-in-out;
         }
 
-        @keyframes subtleBounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-6px); }
-        }
+        @keyframes subtleBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
 
-        /* --- ACTIVE STATE TRIGGERS --- */
+        /* --- STABLE TARGET RESPONSIVE POSITION TRIGGERS --- */
         .envelope-wrapper.open .flap {
             transform: rotateX(180deg);
             z-index: 1;
@@ -269,13 +256,9 @@
             display: block;
         }
 
-        /* Shifts the card upward to sit beautifully centered on screen when opened */
-        .envelope-wrapper.slide-card {
-            transform: translateY(110px); /* Adjusts the envelope downward to balance the layout */
-        }
-
+        /* Completely removed manual envelope translateY offsets */
         .envelope-wrapper.slide-card .card-container {
-            transform: translateY(-370px) scale(1.0);
+            transform: translateY(-290px) scale(1.0); /* Perfect height for iPhone 12 screen safe-areas */
             z-index: 10;
             pointer-events: auto;
             opacity: 1;
@@ -366,7 +349,6 @@
                 confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
                 if (Math.random() > 0.4) confetti.style.borderRadius = '50%';
                 
-                // Track current layout center frame location
                 const rect = document.getElementById('envelope').getBoundingClientRect();
                 confetti.style.left = (rect.left + rect.width / 2) + 'px';
                 confetti.style.top = (rect.top + rect.height / 2) + 'px';
