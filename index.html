@@ -4,12 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
+    <!-- WhatsApp Preview Meta Tags -->
     <title>Shambhavi's Annaprashan Invitation</title>
     <meta property="og:title" content="Shambhavi's Annaprashan Invitation 🌸">
     <meta property="og:description" content="✉️ Tap to open your interactive invitation envelope and view the venue location!">
     <meta property="og:image" content="https://spandanmhr-ops.github.io/Shambhavi-invitation/watermarked_img_10522389305830531999.png">
     <meta property="og:url" content="https://spandanmhr-ops.github.io/Shambhavi-invitation/">
     <meta property="og:type" content="website">
+
+    <!-- 1. Cache Control Headers to block old browser memory tracking entirely -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
 
     <style>
         :root {
@@ -273,6 +279,19 @@
             pointer-events: none;
         }
     </style>
+    
+    <!-- 2. AUTOMATIC CACHE-BUSTER SCRIPT LAYER -->
+    <script>
+        (function() {
+            var urlParams = new URLSearchParams(window.location.search);
+            // If there's no unique cache timestamp tag, force browser to refresh with one instantly
+            if (!urlParams.has('ts')) {
+                var uniqueTime = new Date().getTime();
+                urlParams.set('ts', uniqueTime);
+                window.location.search = urlParams.toString();
+            }
+        })();
+    </script>
 </head>
 <body>
 
@@ -283,7 +302,7 @@
         <div class="envelope-wrapper" id="envelope" onclick="openEnvelope()">
             <div class="envelope-back"></div>
             <div class="flap"></div>
-            <div class="envelope-front"></div>
+            .            <div class="envelope-front"></div>
             
             <div class="heart-seal">
                 <div class="shimmer-line"></div>
@@ -292,11 +311,8 @@
             <div class="tap-text">✉️ Tap to open invitation</div>
 
             <div class="card-container" id="invitationCard" onclick="event.stopPropagation();">
-                <a href="https://maps.app.goo.gl/1VX1vhAUfNKH4Dqk6?g_st=iw" target="_blank">
-                    <img src="watermarked_img_10522389305830531999.png" 
-                         onerror="this.onerror=null; this.src='watermarked_img_10522389305830531999.PNG';" 
-                         alt="Invitation" 
-                         class="invitation-img">
+                <a href="https://maps.app.goo.gl/1VX1vhAUfNKH4Dqk6?g_st=iw" id="imageAnchor" target="_blank">
+                    <img id="inviteImg" src="watermarked_img_10522389305830531999.png" alt="Invitation" class="invitation-img">
                 </a>
                 <div class="action-area">
                     <a href="https://maps.app.goo.gl/1VX1vhAUfNKH4Dqk6?g_st=iw" target="_blank" class="btn">📍 Open Google Maps</a>
@@ -306,7 +322,19 @@
     </div>
 
     <script>
+        // 3. Dynamic Engine Injector: appends the raw timestamp straight to the image request
         window.addEventListener('DOMContentLoaded', () => {
+            var ts = new URLSearchParams(window.location.search).get('ts') || new Date().getTime();
+            var img = document.getElementById('inviteImg');
+            
+            // Forces the image request to always bypass internal storage tracks
+            img.src = "watermarked_img_10522389305830531999.png?cb=" + ts;
+            
+            img.onerror = function() {
+                this.onerror = null;
+                this.src = "watermarked_img_10522389305830531999.PNG?cb=" + ts;
+            };
+
             const colors = ['#c46274', '#e0a3ad', '#b34e60', '#f4cbd2'];
             for (let i = 0; i < 16; i++) {
                 const particle = document.createElement('div');
