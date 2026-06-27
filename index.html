@@ -5,56 +5,193 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shambhavi's Annaprashan Invitation</title>
     <style>
+        :root {
+            --bg-color: #f7e6e9;
+            --envelope-bg: #f2cbd2;
+            --envelope-shadow: #e0a3ad;
+            --btn-color: #c46274;
+        }
+
         body {
             font-family: Arial, sans-serif;
-            background-color: #f7e6e9;
+            background-color: var(--bg-color);
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            overflow-x: hidden;
+            perspective: 1000px;
         }
-        .card {
-            background: #fff;
-            max-width: 500px;
-            width: 100%;
-            border-radius: 20px;
+
+        /* Envelope Wrapper */
+        .envelope-wrapper {
+            position: relative;
+            width: 340px;
+            height: 240px;
+            background-color: var(--envelope-bg);
+            border-radius: 0 0 10px 10px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            cursor: pointer;
+            transition: transform 0.5s ease;
+            margin-top: 50px;
+        }
+
+        /* Front Envelope Flaps Layout */
+        .envelope-wrapper::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 0; height: 0;
+            border-left: 170px solid #f9dae0;
+            border-right: 170px solid #f9dae0;
+            border-bottom: 120px solid #f4cbd2;
+            border-top: 120px solid transparent;
+            z-index: 3;
+            border-radius: 0 0 10px 10px;
+            pointer-events: none;
+        }
+
+        /* Top Opening Flap */
+        .flap {
+            position: absolute;
+            top: 0; left: 0; width: 0; height: 0;
+            border-left: 170px solid transparent;
+            border-right: 170px solid transparent;
+            border-top: 130px solid var(--envelope-bg);
+            transform-origin: top;
+            z-index: 4;
+            transition: transform 0.4s ease-in-out;
+        }
+
+        /* Heart Seal */
+        .heart-seal {
+            position: absolute;
+            top: 110px;
+            left: 153px;
+            width: 34px;
+            height: 34px;
+            background-color: var(--btn-color);
+            transform: rotate(-45deg);
+            z-index: 5;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .heart-seal::before, .heart-seal::after {
+            content: "";
+            position: absolute;
+            width: 34px;
+            height: 34px;
+            background-color: var(--btn-color);
+            border-radius: 50%;
+        }
+        .heart-seal::before { top: -17px; left: 0; }
+        .heart-seal::after { left: 17px; top: 0; }
+
+        /* The Hidden Invitation Card */
+        .card-container {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            width: 310px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             overflow: hidden;
             text-align: center;
+            z-index: 2;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: translateY(0);
+            pointer-events: none;
         }
+
         .invitation-img {
             width: 100%;
             height: auto;
             display: block;
         }
+
         .action-area {
-            padding: 25px 20px;
+            padding: 15px 10px;
             background: #fff8f9;
             border-top: 1px solid #f2d6db;
         }
+
         .btn {
             display: inline-block;
-            background-color: #c46274;
+            background-color: var(--btn-color);
             color: #fff;
             text-decoration: none;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
-            padding: 14px 32px;
-            border-radius: 30px;
-            box-shadow: 0 5px 15px rgba(196,98,116,0.3);
+            padding: 10px 20px;
+            border-radius: 25px;
+            box-shadow: 0 4px 10px rgba(196,98,116,0.3);
+        }
+
+        /* --- ANIMATION ACTIONS WHEN CLICKED --- */
+        .envelope-wrapper.open .flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        .envelope-wrapper.open .heart-seal {
+            opacity: 0;
+            transform: scale(0) rotate(-45deg);
+        }
+
+        .envelope-wrapper.open .card-container {
+            transform: translateY(-260px) scale(1.08);
+            z-index: 10;
+            pointer-events: auto;
+        }
+
+        .envelope-wrapper.open {
+            transform: translateY(100px);
+            cursor: default;
+        }
+
+        /* Quick instructional text animation */
+        .tap-text {
+            position: absolute;
+            bottom: -40px;
+            width: 100%;
+            text-align: center;
+            color: var(--btn-color);
+            font-weight: bold;
+            font-size: 14px;
+            animation: bounce 1.5s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
         }
     </style>
 </head>
 <body>
-    <div class="card">
-        <a href="https://www.google.com/maps/search/?api=1&query=Bidyadharpur+Puja+Mandap+Cuttack" target="_blank">
-            <img src="watermarked_img_10522389305830531999.png" alt="Invitation" class="invitation-img">
-        </a>
-        <div class="action-area">
-            <a href="https://www.google.com/maps/search/?api=1&query=Bidyadharpur+Puja+Mandap+Cuttack" target="_blank" class="btn">📍 Open Google Maps</a>
+
+    <!-- Clickable Envelope Container -->
+    <div class="envelope-wrapper" id="envelope" onclick="openEnvelope()">
+        <div class="flap"></div>
+        <div class="heart-seal"></div>
+        <div class="tap-text">✉️ Tap to open invitation</div>
+
+        <!-- Inner Invitation Card (slides out) -->
+        <div class="card-container" onclick="event.stopPropagation();">
+            <a href="https://www.google.com/maps/search/?api=1&query=Bidyadharpur+Puja+Mandap+Cuttack" target="_blank">
+                <img src="watermarked_img_10522389305830531999.png" alt="Invitation" class="invitation-img">
+            </a>
+            <div class="action-area">
+                <a href="https://www.google.com/maps/search/?api=1&query=Bidyadharpur+Puja+Mandap+Cuttack" target="_blank" class="btn">📍 Open Google Maps</a>
+            </div>
         </div>
     </div>
+
+    <script>
+        function openEnvelope() {
+            document.getElementById('envelope').classList.add('open');
+        }
+    </script>
+
 </body>
 </html>
