@@ -27,7 +27,8 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow-x: hidden;
+            overflow: hidden;
+            position: relative;
         }
 
         .container {
@@ -38,6 +39,7 @@
             width: 100%;
             padding: 20px;
             box-sizing: border-box;
+            z-index: 2;
         }
 
         .envelope-wrapper {
@@ -180,12 +182,19 @@
         .envelope-wrapper.open .tap-text {
             display: none;
         }
+
+        /* Confetti piece styling */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            z-index: 99;
+            border-radius: 3px;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
-
-    <audio id="drumrollAudio" src="https://upload.wikimedia.org/wikipedia/commons/e/ec/Snare_drum_roll.ogg" preload="auto"></audio>
-    <audio id="happyTuneAudio" src="https://upload.wikimedia.org/wikipedia/commons/d/db/Magic_Chime.wav" preload="auto"></audio>
 
     <div class="container">
         <div class="envelope-wrapper" id="envelope" onclick="openEnvelope()">
@@ -211,18 +220,68 @@
             const envelope = document.getElementById('envelope');
             if (envelope.classList.contains('open')) return;
 
-            const drumroll = document.getElementById('drumrollAudio');
-            const happyTune = document.getElementById('happyTuneAudio');
-
-            // Play snare roll instantly on tap
-            drumroll.play().catch(err => console.log("Audio play blocked:", err));
-
             envelope.classList.add('open');
+            
+            // Trigger confetti burst slightly after flap opens
+            setTimeout(createConfettiBurst, 200);
+        }
 
-            // Trigger sparkle magic chime tune 500ms into slide animation
-            setTimeout(() => {
-                happyTune.play().catch(err => console.log("Audio play blocked:", err));
-            }, 500);
+        function createConfettiBurst() {
+            const colors = ['#f4a261', '#e76f51', '#2a9d8f', '#e9c46a', '#c46274', '#ffffff'];
+            const burstCount = 80; // Total number of confetti pieces
+
+            for (let i = 0; i < burstCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                
+                // Random color, shape variation
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                if (Math.random() > 0.5) confetti.style.borderRadius = '50%'; // Make some round
+                
+                // Spawn position (from middle area where envelope opens)
+                confetti.style.left = '50vw';
+                confetti.style.top = '55vh';
+                
+                document.body.appendChild(confetti);
+
+                // Calculate random launch angles and drift speeds
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 5 + Math.random() * 15;
+                let xSpeed = Math.cos(angle) * velocity;
+                let ySpeed = Math.sin(angle) * velocity - 10; // Strong upward trajectory bump
+                
+                let currentX = window.innerWidth / 2;
+                let currentY = window.innerHeight * 0.55;
+                const rotationSpeed = (Math.random() - 0.5) * 30;
+                let currentRotation = Math.random() * 360;
+
+                // Animate physics frame-by-frame
+                const interval = setInterval(() => {
+                    ySpeed += 0.4; // Gravity simulation dragging pieces down
+                    xSpeed *= 0.98; // Air resistance slow down
+                    
+                    currentX += xSpeed;
+                    currentY += ySpeed;
+                    currentRotation += rotationSpeed;
+
+                    confetti.style.left = currentX + 'px';
+                    confetti.style.top = currentY + 'px';
+                    confetti.style.transform = `rotate(${currentRotation}deg)`;
+
+                    // Stop and settle at bottom of browser window
+                    if (currentY >= window.innerHeight - 15) {
+                        clearInterval(interval);
+                        confetti.style.top = (window.innerHeight - 12) + 'px';
+                        
+                        // Slowly fade the settled confetti away after 4 seconds
+                        setTimeout(() => {
+                            confetti.style.transition = 'opacity 1.5s ease';
+                            confetti.style.opacity = '0';
+                            setTimeout(() => confetti.remove(), 1500);
+                        }, 4000);
+                    }
+                }, 20);
+            }
         }
     </script>
 
