@@ -86,15 +86,14 @@
             100% { transform: translateY(-10vh) scale(1.4); opacity: 0; }
         }
 
-        /* Fixed Container with perfect baseline padding alignment for mobile screen stacks */
         .container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-end; /* Dynamically grounds the envelope container base */
+            justify-content: flex-end;
             width: 100%;
             height: 100%;
-            padding-bottom: 8vh; /* Keeps it perfectly clear of mobile browser address footers */
+            padding-bottom: 8vh;
             box-sizing: border-box;
             z-index: 5;
             position: relative;
@@ -119,7 +118,6 @@
             box-shadow: 0 15px 35px rgba(196,98,116,0.3);
         }
 
-        /* Fixed presentation card position properties */
         .card-container {
             display: none; 
             position: absolute;
@@ -138,10 +136,31 @@
             transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
         }
 
+        /* Image Wrapper to perfectly overlay the Residence Text at the bottom */
+        .img-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
         .invitation-img {
             width: 100%;
             height: auto;
             display: block;
+        }
+
+        /* NEW STYLE: Adds the stylized "At our Residence" badge precisely over the bottom address track */
+        .residence-overlay {
+            position: absolute;
+            bottom: 45px; /* Sits precisely above the printed address line */
+            width: 100%;
+            left: 0;
+            font-size: 14px;
+            font-weight: bold;
+            color: #333333;
+            text-align: center;
+            font-family: 'Georgia', serif;
+            letter-spacing: 0.5px;
+            text-shadow: 0px 0px 4px #ffffff, 0px 0px 4px #ffffff; /* Creates clean canvas legibility background shield */
         }
 
         .action-area {
@@ -241,7 +260,6 @@
 
         @keyframes subtleBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
 
-        /* --- STABLE TARGET RESPONSIVE POSITION TRIGGERS --- */
         .envelope-wrapper.open .flap {
             transform: rotateX(180deg);
             z-index: 1;
@@ -256,9 +274,8 @@
             display: block;
         }
 
-        /* Completely removed manual envelope translateY offsets */
         .envelope-wrapper.slide-card .card-container {
-            transform: translateY(-290px) scale(1.0); /* Perfect height for iPhone 12 screen safe-areas */
+            transform: translateY(-290px) scale(1.0);
             z-index: 10;
             pointer-events: auto;
             opacity: 1;
@@ -296,8 +313,9 @@
             <div class="tap-text">✉️ Tap to open invitation</div>
 
             <div class="card-container" id="invitationCard" onclick="event.stopPropagation();">
-                <a href="https://maps.app.goo.gl/1VX1vhAUfNKH4Dqk6?g_st=iw" target="_blank">
+                <a href="https://maps.app.goo.gl/1VX1vhAUfNKH4Dqk6?g_st=iw" target="_blank" class="img-wrapper">
                     <img src="watermarked_img_10522389305830531999.png" alt="Invitation" class="invitation-img">
+                    <div class="residence-overlay">📍 At our Residence:</div>
                 </a>
                 <div class="action-area">
                     <a href="https://maps.app.goo.gl/1VX1vhAUfNKH4Dqk6?g_st=iw" target="_blank" class="btn">📍 Open Google Maps</a>
