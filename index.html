@@ -63,18 +63,16 @@
             position: relative;
         }
 
-        /* Envelope main layout wrapper */
         .envelope-wrapper {
             position: relative;
             width: 340px;
             height: 240px;
             cursor: pointer;
-            margin-top: 220px; /* Gives beautiful headroom spacing */
+            margin-top: 200px;
             transition: transform 0.3s ease;
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* 1. LAYER 1: The back wall of the envelope pouch */
         .envelope-back {
             position: absolute;
             width: 100%;
@@ -85,8 +83,9 @@
             box-shadow: 0 15px 35px rgba(196,98,116,0.25);
         }
 
-        /* 2. LAYER 2: The actual invitation card container */
+        /* HARD LOCKED DOWN DEFAULT STATE: Hidden entirely from system rendering engines */
         .card-container {
+            display: none; 
             position: absolute;
             top: 10px;
             left: 20px;
@@ -96,10 +95,9 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.15);
             overflow: hidden;
             text-align: center;
-            z-index: 2; /* Sandwiched safely behind foreground flaps */
-            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
-            transform: translateY(12px) scale(0.9); /* Safely tucked away inside the envelope body */
-            opacity: 0; /* Fully hidden before click */
+            z-index: 2;
+            opacity: 0;
+            transform: translateY(120px) scale(0.9);
             pointer-events: none;
         }
 
@@ -127,7 +125,6 @@
             box-shadow: 0 5px 15px rgba(196,98,116,0.4);
         }
 
-        /* 3. LAYER 3: The absolute foreground pocket walls (Covers the card completely) */
         .envelope-front {
             position: absolute;
             width: 0;
@@ -138,12 +135,11 @@
             border-right: 170px solid #f9dae0;
             border-bottom: 120px solid #f4cbd2;
             border-top: 120px solid transparent;
-            z-index: 3; /* Blocks any pre-reveals from showing up underneath */
+            z-index: 3;
             border-radius: 0 0 10px 10px;
             pointer-events: none;
         }
 
-        /* 4. LAYER 4: The top triangular seal flap */
         .flap {
             position: absolute;
             top: 0;
@@ -158,7 +154,6 @@
             transition: transform 0.5s ease, z-index 0.2s ease;
         }
 
-        /* 5. LAYER 5: The dynamic heart sticker button seal */
         .heart-seal {
             position: absolute;
             top: 110px;
@@ -199,10 +194,10 @@
             50% { transform: translateY(-6px); }
         }
 
-        /* --- ACTIVE HANDSHAKE ANIMATIONS ONCE CLICKED --- */
+        /* --- STATE TRIGGER RUN CLASSES --- */
         .envelope-wrapper.open .flap {
             transform: rotateX(180deg);
-            z-index: 1; /* Clears path by dropping behind envelope layout completely */
+            z-index: 1;
         }
 
         .envelope-wrapper.open .heart-seal {
@@ -210,11 +205,16 @@
             transform: scale(0);
         }
 
-        .envelope-wrapper.open .card-container {
-            transform: translateY(-380px) scale(1.05); /* Slides upward completely free out of bounds */
-            z-index: 10; /* Pops forward above all outer pocket walls */
+        /* Active styling applied explicitly via JavaScript timing logic */
+        .envelope-wrapper.reveal-card .card-container {
+            display: block; /* Turn it on right when the flap pulls back */
+        }
+
+        .envelope-wrapper.slide-card .card-container {
+            transform: translateY(-380px) scale(1.05);
+            z-index: 10;
             pointer-events: auto;
-            opacity: 1; /* Fades fully visible right at step launch */
+            opacity: 1;
         }
 
         .envelope-wrapper.open .tap-text {
@@ -241,7 +241,7 @@
             <div class="heart-seal"></div>
             <div class="tap-text">✉️ Tap to open invitation</div>
 
-            <div class="card-container" onclick="event.stopPropagation();">
+            <div class="card-container" id="invitationCard" onclick="event.stopPropagation();">
                 <a href="https://maps.app.goo.gl/1VX1vhAUfNKH4Dqk6?g_st=iw" target="_blank">
                     <img src="watermarked_img_10522389305830531999.png" alt="Invitation" class="invitation-img">
                 </a>
@@ -253,7 +253,7 @@
     </div>
 
     <script>
-        // Smooth ambient particles
+        // Ambient background loops
         window.addEventListener('DOMContentLoaded', () => {
             const colors = ['#f4cbd2', '#f9dae0', '#ffffff', '#fcdfd3'];
             for (let i = 0; i < 12; i++) {
@@ -273,7 +273,20 @@
         function openEnvelope() {
             const envelope = document.getElementById('envelope');
             if (envelope.classList.contains('open')) return;
+            
+            // 1. Instantly flip open envelope flap configuration 
             envelope.classList.add('open');
+            
+            // 2. Wait 150ms for flap to swing halfway clear, then make card exist in HTML space safely out of sight
+            setTimeout(() => {
+                envelope.classList.add('reveal-card');
+                
+                // 3. Immediately trigger upward physics transition glide frame
+                setTimeout(() => {
+                    envelope.classList.add('slide-card');
+                }, 50);
+            }, 150);
+
             setTimeout(createConfettiBurst, 250);
         }
 
