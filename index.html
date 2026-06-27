@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- WhatsApp Preview Meta Tags -->
     <title>Shambhavi's Annaprashan Invitation</title>
     <meta property="og:title" content="Shambhavi's Annaprashan Invitation 🌸">
     <meta property="og:description" content="✉️ Tap to open your interactive invitation envelope and view the venue location!">
-    <meta property="og:image" content="https://spandanmhr-ops.github.io/Shambhavi-invitation/watermarked_img_10522389305830531999_2.png">
+    <meta property="og:image" content="https://spandanmhr-ops.github.io/Shambhavi-invitation/watermarked_img_10522389305830531999.png">
     <meta property="og:url" content="https://spandanmhr-ops.github.io/Shambhavi-invitation/">
     <meta property="og:type" content="website">
 
@@ -120,6 +119,7 @@
         }
 
         .card-container {
+            display: none; 
             position: absolute;
             top: 10px;
             left: 15px;
@@ -293,9 +293,8 @@
 
             <div class="card-container" id="invitationCard" onclick="event.stopPropagation();">
                 <a href="https://maps.app.goo.gl/1VX1vhAUfNKH4Dqk6?g_st=iw" target="_blank">
-                    <!-- Configured seamlessly to point to the new asset file path name -->
-                    <img src="watermarked_img_10522389305830531999_2.png" 
-                         onerror="this.onerror=null; this.src='watermarked_img_10522389305830531999_2.PNG';" 
+                    <img src="watermarked_img_10522389305830531999.png" 
+                         onerror="this.onerror=null; this.src='watermarked_img_10522389305830531999.PNG';" 
                          alt="Invitation" 
                          class="invitation-img">
                 </a>
