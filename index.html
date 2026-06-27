@@ -184,6 +184,9 @@
 </head>
 <body>
 
+    <audio id="drumrollAudio" src="https://assets.mixkit.co/active_storage/sfx/2449/2449-84.wav" preload="auto"></audio>
+    <audio id="happyTuneAudio" src="https://assets.mixkit.co/active_storage/sfx/2017/2017-84.wav" preload="auto"></audio>
+
     <div class="container">
         <div class="envelope-wrapper" id="envelope" onclick="openEnvelope()">
             <div class="envelope-back"></div>
@@ -205,7 +208,24 @@
 
     <script>
         function openEnvelope() {
-            document.getElementById('envelope').classList.add('open');
+            const envelope = document.getElementById('envelope');
+            
+            // Avoid triggering multiple times if already open
+            if (envelope.classList.contains('open')) return;
+
+            const drumroll = document.getElementById('drumrollAudio');
+            const happyTune = document.getElementById('happyTuneAudio');
+
+            // 1. Play the drum roll instantly upon tapping
+            drumroll.play().catch(error => console.log("Audio play blocked by browser:", error));
+
+            // 2. Trigger the visual CSS open animation sequence
+            envelope.classList.add('open');
+
+            // 3. Wait 750 milliseconds (exactly when the card reaches its top peak) to play the joyful chime tune
+            setTimeout(() => {
+                happyTune.play().catch(error => console.log("Audio play blocked by browser:", error));
+            }, 750);
         }
     </script>
 
