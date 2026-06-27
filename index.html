@@ -294,7 +294,11 @@
 
             <div class="card-container" id="invitationCard" onclick="event.stopPropagation();">
                 <a href="https://maps.app.goo.gl/1VX1vhAUfNKH4Dqk6?g_st=iw" target="_blank">
-                    <img src="watermarked_img_10522389305830531999.png" alt="Invitation" class="invitation-img">
+                    <!-- Added an automatic fallback handler to catch capitalized .PNG extensions -->
+                    <img src="watermarked_img_10522389305830531999.png" 
+                         onerror="this.onerror=null; this.src='watermarked_img_10522389305830531999.PNG';" 
+                         alt="Invitation" 
+                         class="invitation-img">
                 </a>
                 <div class="action-area">
                     <a href="https://maps.app.goo.gl/1VX1vhAUfNKH4Dqk6?g_st=iw" target="_blank" class="btn">📍 Open Google Maps</a>
