@@ -21,7 +21,7 @@
 
         body {
             font-family: Arial, sans-serif;
-            background-color: var(--bg-color);
+            background: linear-gradient(135deg, #f7e6e9 0%, #fcedf0 100%);
             margin: 0;
             display: flex;
             justify-content: center;
@@ -29,6 +29,21 @@
             min-height: 100vh;
             overflow: hidden;
             position: relative;
+        }
+
+        /* Ambient floating background elements */
+        .bg-sparkle {
+            position: absolute;
+            background: rgba(244, 162, 97, 0.2);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: floatUp 8s infinite linear;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+            50% { opacity: 0.6; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
         }
 
         .container {
@@ -42,12 +57,19 @@
             z-index: 2;
         }
 
+        /* 3D Envelope Frame with hover lift effect */
         .envelope-wrapper {
             position: relative;
             width: 340px;
             height: 240px;
             cursor: pointer;
             margin-top: 260px;
+            transform-style: preserve-3d;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .envelope-wrapper:hover:not(.open) {
+            transform: translateY(-8px) scale(1.02);
         }
 
         .envelope-back {
@@ -57,7 +79,7 @@
             background: var(--envelope-inside);
             z-index: 1;
             border-radius: 0 0 10px 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            box-shadow: 0 15px 35px rgba(196,98,116,0.2);
         }
 
         .card-container {
@@ -67,11 +89,11 @@
             width: 300px;
             background: #fff;
             border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             overflow: hidden;
             text-align: center;
             z-index: 2;
-            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
+            transition: transform 0.9s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.4s ease;
             transform: translateY(120px) scale(0.9);
             opacity: 0;
             pointer-events: none;
@@ -91,13 +113,20 @@
 
         .btn {
             display: inline-block;
-            background-color: var(--btn-color);
+            background: linear-gradient(135deg, #c46274 0%, #b34e60 100%);
             color: #fff;
             text-decoration: none;
             font-size: 14px;
             font-weight: bold;
-            padding: 10px 20px;
+            padding: 11px 24px;
             border-radius: 25px;
+            box-shadow: 0 5px 15px rgba(196,98,116,0.4);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 7px 20px rgba(196,98,116,0.5);
         }
 
         .envelope-front {
@@ -126,30 +155,48 @@
             border-top: 130px solid var(--envelope-bg);
             transform-origin: top;
             z-index: 4;
-            transition: transform 0.5s ease, z-index 0.2s ease;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.2s ease;
         }
 
+        /* Shiny Metallic Heart Seal */
         .heart-seal {
             position: absolute;
             top: 110px;
             left: 153px;
             width: 34px;
             height: 34px;
-            background-color: var(--btn-color);
+            background: linear-gradient(135deg, #c46274 0%, #9e3f50 100%);
             transform: rotate(-45deg);
             z-index: 5;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            overflow: hidden;
         }
         .heart-seal::before, .heart-seal::after {
             content: "";
             position: absolute;
             width: 34px;
             height: 34px;
-            background-color: var(--btn-color);
+            background: inherit;
             border-radius: 50%;
         }
         .heart-seal::before { top: -17px; left: 0; }
         .heart-seal::after { left: 17px; top: 0; }
+        
+        /* Shimmer gleam line passing through the heart */
+        .heart-seal::after {
+            content: "";
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: linear-gradient(to bottom right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+            transform: rotate(45deg);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translate(-100%, -100%) rotate(45deg); }
+            100% { transform: translate(100%, 100%) rotate(45deg); }
+        }
 
         .tap-text {
             position: absolute;
@@ -160,6 +207,13 @@
             font-weight: bold;
             font-size: 15px;
             z-index: 10;
+            text-shadow: 0 1px 2px white;
+            animation: subtleBounce 2s infinite ease-in-out;
+        }
+
+        @keyframes subtleBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
         }
 
         .envelope-wrapper.open .flap {
@@ -173,7 +227,7 @@
         }
 
         .envelope-wrapper.open .card-container {
-            transform: translateY(-400px) scale(1.05);
+            transform: translateY(-410px) scale(1.05);
             z-index: 10;
             pointer-events: auto;
             opacity: 1;
@@ -183,13 +237,12 @@
             display: none;
         }
 
-        /* Confetti piece styling */
         .confetti {
             position: absolute;
             width: 10px;
             height: 10px;
             z-index: 99;
-            border-radius: 3px;
+            border-radius: 2px;
             pointer-events: none;
         }
     </style>
@@ -216,50 +269,57 @@
     </div>
 
     <script>
+        // Generate ambient subtle background sparks on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const colors = ['#f4cbd2', '#f9dae0', '#ffffff', '#fcdfd3'];
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('bg-sparkle');
+                const size = Math.random() * 15 + 8;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = Math.random() * 6 + 6 + 's';
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                document.body.appendChild(particle);
+            }
+        });
+
         function openEnvelope() {
             const envelope = document.getElementById('envelope');
             if (envelope.classList.contains('open')) return;
-
             envelope.classList.add('open');
-            
-            // Trigger confetti burst slightly after flap opens
-            setTimeout(createConfettiBurst, 200);
+            setTimeout(createConfettiBurst, 250);
         }
 
         function createConfettiBurst() {
             const colors = ['#f4a261', '#e76f51', '#2a9d8f', '#e9c46a', '#c46274', '#ffffff'];
-            const burstCount = 80; // Total number of confetti pieces
+            const burstCount = 85;
 
             for (let i = 0; i < burstCount; i++) {
                 const confetti = document.createElement('div');
                 confetti.classList.add('confetti');
-                
-                // Random color, shape variation
                 confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                if (Math.random() > 0.5) confetti.style.borderRadius = '50%'; // Make some round
+                if (Math.random() > 0.4) confetti.style.borderRadius = '50%';
                 
-                // Spawn position (from middle area where envelope opens)
                 confetti.style.left = '50vw';
                 confetti.style.top = '55vh';
-                
                 document.body.appendChild(confetti);
 
-                // Calculate random launch angles and drift speeds
                 const angle = Math.random() * Math.PI * 2;
-                const velocity = 5 + Math.random() * 15;
+                const velocity = 6 + Math.random() * 14;
                 let xSpeed = Math.cos(angle) * velocity;
-                let ySpeed = Math.sin(angle) * velocity - 10; // Strong upward trajectory bump
+                let ySpeed = Math.sin(angle) * velocity - 12;
                 
                 let currentX = window.innerWidth / 2;
                 let currentY = window.innerHeight * 0.55;
-                const rotationSpeed = (Math.random() - 0.5) * 30;
+                const rotationSpeed = (Math.random() - 0.5) * 40;
                 let currentRotation = Math.random() * 360;
 
-                // Animate physics frame-by-frame
                 const interval = setInterval(() => {
-                    ySpeed += 0.4; // Gravity simulation dragging pieces down
-                    xSpeed *= 0.98; // Air resistance slow down
-                    
+                    ySpeed += 0.45;
+                    xSpeed *= 0.97;
                     currentX += xSpeed;
                     currentY += ySpeed;
                     currentRotation += rotationSpeed;
@@ -268,16 +328,13 @@
                     confetti.style.top = currentY + 'px';
                     confetti.style.transform = `rotate(${currentRotation}deg)`;
 
-                    // Stop and settle at bottom of browser window
                     if (currentY >= window.innerHeight - 15) {
                         clearInterval(interval);
                         confetti.style.top = (window.innerHeight - 12) + 'px';
-                        
-                        // Slowly fade the settled confetti away after 4 seconds
                         setTimeout(() => {
-                            confetti.style.transition = 'opacity 1.5s ease';
+                            confetti.style.transition = 'opacity 1s ease';
                             confetti.style.opacity = '0';
-                            setTimeout(() => confetti.remove(), 1500);
+                            setTimeout(() => confetti.remove(), 1000);
                         }, 4000);
                     }
                 }, 20);
