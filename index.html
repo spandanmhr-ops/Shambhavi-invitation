@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>Shambhavi's Annaprashan Invitation</title>
+    <meta property="og:title" content="Shambhavi's Annaprashan Invitation 🌸">
+    <meta property="og:description" content="✉️ Tap to open your interactive invitation envelope and view the venue location!">
+    <meta property="og:image" content="https://spandanmhr-ops.github.io/Shambhavi-invitation/watermarked_img_10522389305830531999.png">
+    <meta property="og:url" content="https://spandanmhr-ops.github.io/Shambhavi-invitation/">
+    <meta property="og:type" content="website">
+
     <style>
         :root {
             --bg-color: #f7e6e9;
@@ -20,6 +27,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         .container {
@@ -32,23 +40,12 @@
             box-sizing: border-box;
         }
 
-        /* Outer Frame to clip the card inside the bottom half */
         .envelope-wrapper {
             position: relative;
             width: 340px;
             height: 240px;
             cursor: pointer;
-            margin-top: 240px;
-        }
-
-        /* A solid masking block that prevents anything from sticking out the bottom */
-        .mask-layer {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            overflow: visible; /* Allows the card to rise up top, but masks layers */
+            margin-top: 260px;
         }
 
         .envelope-back {
@@ -61,10 +58,9 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         }
 
-        /* THE INVITATION CARD (Starts hidden, tucked down safely) */
         .card-container {
             position: absolute;
-            top: 0;
+            top: 10px;
             left: 20px;
             width: 300px;
             background: #fff;
@@ -73,10 +69,10 @@
             overflow: hidden;
             text-align: center;
             z-index: 2;
-            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-            transform: translateY(10px); /* Pushed completely down into the pouch */
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
+            transform: translateY(120px) scale(0.9);
+            opacity: 0;
             pointer-events: none;
-            opacity: 0; /* Keeps it unseen until opened */
         }
 
         .invitation-img {
@@ -102,7 +98,6 @@
             border-radius: 25px;
         }
 
-        /* FRONT DESIGN FLAPS */
         .envelope-front {
             position: absolute;
             width: 0;
@@ -113,12 +108,11 @@
             border-right: 170px solid #f9dae0;
             border-bottom: 120px solid #f4cbd2;
             border-top: 120px solid transparent;
-            z-index: 4; /* Higher than the card container */
+            z-index: 3;
             border-radius: 0 0 10px 10px;
             pointer-events: none;
         }
 
-        /* TOP SEAL FLAP */
         .flap {
             position: absolute;
             top: 0;
@@ -129,11 +123,10 @@
             border-right: 170px solid transparent;
             border-top: 130px solid var(--envelope-bg);
             transform-origin: top;
-            z-index: 5;
-            transition: transform 0.4s ease, z-index 0.2s ease;
+            z-index: 4;
+            transition: transform 0.5s ease, z-index 0.2s ease;
         }
 
-        /* HEART STICKER */
         .heart-seal {
             position: absolute;
             top: 110px;
@@ -142,7 +135,7 @@
             height: 34px;
             background-color: var(--btn-color);
             transform: rotate(-45deg);
-            z-index: 6;
+            z-index: 5;
             transition: all 0.3s ease;
         }
         .heart-seal::before, .heart-seal::after {
@@ -167,7 +160,6 @@
             z-index: 10;
         }
 
-        /* --- CLICKED TRANSFORMS --- */
         .envelope-wrapper.open .flap {
             transform: rotateX(180deg);
             z-index: 1;
@@ -179,7 +171,7 @@
         }
 
         .envelope-wrapper.open .card-container {
-            transform: translateY(-390px) scale(1.05); /* Slides upward gracefully */
+            transform: translateY(-400px) scale(1.05);
             z-index: 10;
             pointer-events: auto;
             opacity: 1;
@@ -194,21 +186,18 @@
 
     <div class="container">
         <div class="envelope-wrapper" id="envelope" onclick="openEnvelope()">
-            <div class="mask-layer">
-                <div class="envelope-back"></div>
-                <div class="flap"></div>
-                <div class="envelope-front"></div>
-                <div class="heart-seal"></div>
-                <div class="tap-text">✉️ Tap to open invitation</div>
+            <div class="envelope-back"></div>
+            <div class="flap"></div>
+            <div class="envelope-front"></div>
+            <div class="heart-seal"></div>
+            <div class="tap-text">✉️ Tap to open invitation</div>
 
-                <!-- Invitation Pouch Contents -->
-                <div class="card-container" onclick="event.stopPropagation();">
-                    <a href="https://www.google.com/maps/search/?api=1&query=Bidyadharpur+Puja+Mandap+Cuttack" target="_blank">
-                        <img src="watermarked_img_10522389305830531999.png" alt="Invitation" class="invitation-img">
-                    </a>
-                    <div class="action-area">
-                        <a href="https://www.google.com/maps/search/?api=1&query=Bidyadharpur+Puja+Mandap+Cuttack" target="_blank" class="btn">📍 Open Google Maps</a>
-                    </div>
+            <div class="card-container" onclick="event.stopPropagation();">
+                <a href="https://www.google.com/maps/search/?api=1&query=Bidyadharpur+Puja+Mandap+Cuttack" target="_blank">
+                    <img src="watermarked_img_10522389305830531999.png" alt="Invitation" class="invitation-img">
+                </a>
+                <div class="action-area">
+                    <a href="https://www.google.com/maps/search/?api=1&query=Bidyadharpur+Puja+Mandap+Cuttack" target="_blank" class="btn">📍 Open Google Maps</a>
                 </div>
             </div>
         </div>
