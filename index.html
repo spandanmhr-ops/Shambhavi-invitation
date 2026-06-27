@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
+    <!-- WhatsApp Preview Meta Tags -->
     <title>Shambhavi's Annaprashan Invitation</title>
     <meta property="og:title" content="Shambhavi's Annaprashan Invitation 🌸">
     <meta property="og:description" content="✉️ Tap to open your interactive invitation envelope and view the venue location!">
@@ -136,31 +137,10 @@
             transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
         }
 
-        /* Image Wrapper to perfectly overlay the Residence Text at the bottom */
-        .img-wrapper {
-            position: relative;
-            width: 100%;
-        }
-
         .invitation-img {
             width: 100%;
             height: auto;
             display: block;
-        }
-
-        /* NEW STYLE: Adds the stylized "At our Residence" badge precisely over the bottom address track */
-        .residence-overlay {
-            position: absolute;
-            bottom: 45px; /* Sits precisely above the printed address line */
-            width: 100%;
-            left: 0;
-            font-size: 14px;
-            font-weight: bold;
-            color: #333333;
-            text-align: center;
-            font-family: 'Georgia', serif;
-            letter-spacing: 0.5px;
-            text-shadow: 0px 0px 4px #ffffff, 0px 0px 4px #ffffff; /* Creates clean canvas legibility background shield */
         }
 
         .action-area {
@@ -313,9 +293,8 @@
             <div class="tap-text">✉️ Tap to open invitation</div>
 
             <div class="card-container" id="invitationCard" onclick="event.stopPropagation();">
-                <a href="https://maps.app.goo.gl/1VX1vhAUfNKH4Dqk6?g_st=iw" target="_blank" class="img-wrapper">
+                <a href="https://maps.app.goo.gl/1VX1vhAUfNKH4Dqk6?g_st=iw" target="_blank">
                     <img src="watermarked_img_10522389305830531999.png" alt="Invitation" class="invitation-img">
-                    <div class="residence-overlay">📍 At our Residence:</div>
                 </a>
                 <div class="action-area">
                     <a href="https://maps.app.goo.gl/1VX1vhAUfNKH4Dqk6?g_st=iw" target="_blank" class="btn">📍 Open Google Maps</a>
