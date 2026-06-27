@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <title>Shambhavi's Annaprashan Invitation</title>
     <meta property="og:title" content="Shambhavi's Annaprashan Invitation 🌸">
@@ -19,16 +19,36 @@
             --btn-color: #c46274;
         }
 
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
         body {
             font-family: Arial, sans-serif;
-            background-color: var(--bg-color);
-            margin: 0;
+            background: linear-gradient(135deg, #f7e6e9 0%, #fcedf0 100%);
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
             position: relative;
+        }
+
+        .bg-sparkle {
+            position: absolute;
+            background: rgba(244, 162, 97, 0.25);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: floatUp 8s infinite linear;
+            z-index: 1;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(105vh) scale(0.5); opacity: 0; }
+            50% { opacity: 0.6; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
         }
 
         .container {
@@ -37,19 +57,24 @@
             align-items: center;
             justify-content: center;
             width: 100%;
-            padding: 20px;
+            height: 100%;
             box-sizing: border-box;
-            z-index: 2;
+            z-index: 5;
+            position: relative;
         }
 
+        /* Envelope main layout wrapper */
         .envelope-wrapper {
             position: relative;
             width: 340px;
             height: 240px;
             cursor: pointer;
-            margin-top: 260px;
+            margin-top: 220px; /* Gives beautiful headroom spacing */
+            transition: transform 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
         }
 
+        /* 1. LAYER 1: The back wall of the envelope pouch */
         .envelope-back {
             position: absolute;
             width: 100%;
@@ -57,9 +82,10 @@
             background: var(--envelope-inside);
             z-index: 1;
             border-radius: 0 0 10px 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            box-shadow: 0 15px 35px rgba(196,98,116,0.25);
         }
 
+        /* 2. LAYER 2: The actual invitation card container */
         .card-container {
             position: absolute;
             top: 10px;
@@ -67,13 +93,13 @@
             width: 300px;
             background: #fff;
             border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
             overflow: hidden;
             text-align: center;
-            z-index: 2;
+            z-index: 2; /* Sandwiched safely behind foreground flaps */
             transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
-            transform: translateY(120px) scale(0.9);
-            opacity: 0;
+            transform: translateY(12px) scale(0.9); /* Safely tucked away inside the envelope body */
+            opacity: 0; /* Fully hidden before click */
             pointer-events: none;
         }
 
@@ -91,15 +117,17 @@
 
         .btn {
             display: inline-block;
-            background-color: var(--btn-color);
+            background: linear-gradient(135deg, #c46274 0%, #b34e60 100%);
             color: #fff;
             text-decoration: none;
             font-size: 14px;
             font-weight: bold;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border-radius: 25px;
+            box-shadow: 0 5px 15px rgba(196,98,116,0.4);
         }
 
+        /* 3. LAYER 3: The absolute foreground pocket walls (Covers the card completely) */
         .envelope-front {
             position: absolute;
             width: 0;
@@ -110,11 +138,12 @@
             border-right: 170px solid #f9dae0;
             border-bottom: 120px solid #f4cbd2;
             border-top: 120px solid transparent;
-            z-index: 3;
+            z-index: 3; /* Blocks any pre-reveals from showing up underneath */
             border-radius: 0 0 10px 10px;
             pointer-events: none;
         }
 
+        /* 4. LAYER 4: The top triangular seal flap */
         .flap {
             position: absolute;
             top: 0;
@@ -129,23 +158,25 @@
             transition: transform 0.5s ease, z-index 0.2s ease;
         }
 
+        /* 5. LAYER 5: The dynamic heart sticker button seal */
         .heart-seal {
             position: absolute;
             top: 110px;
             left: 153px;
             width: 34px;
             height: 34px;
-            background-color: var(--btn-color);
+            background: linear-gradient(135deg, #c46274 0%, #9e3f50 100%);
             transform: rotate(-45deg);
             z-index: 5;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
         .heart-seal::before, .heart-seal::after {
             content: "";
             position: absolute;
             width: 34px;
             height: 34px;
-            background-color: var(--btn-color);
+            background: inherit;
             border-radius: 50%;
         }
         .heart-seal::before { top: -17px; left: 0; }
@@ -160,11 +191,18 @@
             font-weight: bold;
             font-size: 15px;
             z-index: 10;
+            animation: subtleBounce 2s infinite ease-in-out;
         }
 
+        @keyframes subtleBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        /* --- ACTIVE HANDSHAKE ANIMATIONS ONCE CLICKED --- */
         .envelope-wrapper.open .flap {
             transform: rotateX(180deg);
-            z-index: 1;
+            z-index: 1; /* Clears path by dropping behind envelope layout completely */
         }
 
         .envelope-wrapper.open .heart-seal {
@@ -173,23 +211,22 @@
         }
 
         .envelope-wrapper.open .card-container {
-            transform: translateY(-400px) scale(1.05);
-            z-index: 10;
+            transform: translateY(-380px) scale(1.05); /* Slides upward completely free out of bounds */
+            z-index: 10; /* Pops forward above all outer pocket walls */
             pointer-events: auto;
-            opacity: 1;
+            opacity: 1; /* Fades fully visible right at step launch */
         }
 
         .envelope-wrapper.open .tap-text {
             display: none;
         }
 
-        /* Confetti piece styling */
         .confetti {
             position: absolute;
-            width: 10px;
-            height: 10px;
+            width: 9px;
+            height: 9px;
             z-index: 99;
-            border-radius: 3px;
+            border-radius: 2px;
             pointer-events: none;
         }
     </style>
@@ -216,50 +253,57 @@
     </div>
 
     <script>
+        // Smooth ambient particles
+        window.addEventListener('DOMContentLoaded', () => {
+            const colors = ['#f4cbd2', '#f9dae0', '#ffffff', '#fcdfd3'];
+            for (let i = 0; i < 12; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('bg-sparkle');
+                const size = Math.random() * 12 + 6;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                particle.style.animationDuration = Math.random() * 5 + 5 + 's';
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                document.body.appendChild(particle);
+            }
+        });
+
         function openEnvelope() {
             const envelope = document.getElementById('envelope');
             if (envelope.classList.contains('open')) return;
-
             envelope.classList.add('open');
-            
-            // Trigger confetti burst slightly after flap opens
-            setTimeout(createConfettiBurst, 200);
+            setTimeout(createConfettiBurst, 250);
         }
 
         function createConfettiBurst() {
             const colors = ['#f4a261', '#e76f51', '#2a9d8f', '#e9c46a', '#c46274', '#ffffff'];
-            const burstCount = 80; // Total number of confetti pieces
+            const burstCount = 75;
 
             for (let i = 0; i < burstCount; i++) {
                 const confetti = document.createElement('div');
                 confetti.classList.add('confetti');
-                
-                // Random color, shape variation
                 confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                if (Math.random() > 0.5) confetti.style.borderRadius = '50%'; // Make some round
+                if (Math.random() > 0.4) confetti.style.borderRadius = '50%';
                 
-                // Spawn position (from middle area where envelope opens)
                 confetti.style.left = '50vw';
-                confetti.style.top = '55vh';
-                
+                confetti.style.top = '50vh';
                 document.body.appendChild(confetti);
 
-                // Calculate random launch angles and drift speeds
                 const angle = Math.random() * Math.PI * 2;
-                const velocity = 5 + Math.random() * 15;
+                const velocity = 5 + Math.random() * 12;
                 let xSpeed = Math.cos(angle) * velocity;
-                let ySpeed = Math.sin(angle) * velocity - 10; // Strong upward trajectory bump
+                let ySpeed = Math.sin(angle) * velocity - 10;
                 
                 let currentX = window.innerWidth / 2;
-                let currentY = window.innerHeight * 0.55;
-                const rotationSpeed = (Math.random() - 0.5) * 30;
+                let currentY = window.innerHeight * 0.50;
+                const rotationSpeed = (Math.random() - 0.5) * 40;
                 let currentRotation = Math.random() * 360;
 
-                // Animate physics frame-by-frame
                 const interval = setInterval(() => {
-                    ySpeed += 0.4; // Gravity simulation dragging pieces down
-                    xSpeed *= 0.98; // Air resistance slow down
-                    
+                    ySpeed += 0.4;
+                    xSpeed *= 0.97;
                     currentX += xSpeed;
                     currentY += ySpeed;
                     currentRotation += rotationSpeed;
@@ -268,17 +312,14 @@
                     confetti.style.top = currentY + 'px';
                     confetti.style.transform = `rotate(${currentRotation}deg)`;
 
-                    // Stop and settle at bottom of browser window
                     if (currentY >= window.innerHeight - 15) {
                         clearInterval(interval);
                         confetti.style.top = (window.innerHeight - 12) + 'px';
-                        
-                        // Slowly fade the settled confetti away after 4 seconds
                         setTimeout(() => {
-                            confetti.style.transition = 'opacity 1.5s ease';
+                            confetti.style.transition = 'opacity 1s ease';
                             confetti.style.opacity = '0';
-                            setTimeout(() => confetti.remove(), 1500);
-                        }, 4000);
+                            setTimeout(() => confetti.remove(), 1000);
+                        }, 3500);
                     }
                 }, 20);
             }
