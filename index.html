@@ -20,11 +20,9 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow-x: hidden;
-            perspective: 1000px;
+            overflow: hidden;
         }
 
-        /* Main Container to organize layout spacing */
         .container {
             display: flex;
             flex-direction: column;
@@ -35,7 +33,7 @@
             box-sizing: border-box;
         }
 
-        /* Envelope Container */
+        /* The overall envelope wrapper */
         .envelope-wrapper {
             position: relative;
             width: 340px;
@@ -44,74 +42,34 @@
             border-radius: 0 0 10px 10px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             cursor: pointer;
-            transition: transform 0.5s ease;
-            margin-top: 150px; /* Space for the card to rise up */
+            transition: transform 0.6s ease;
+            margin-top: 240px; /* Gives plenty of room for card to slide up */
         }
 
-        /* Bottom & Side Flaps (Keeps the card hidden behind it) */
-        .envelope-wrapper::before {
-            content: "";
+        /* 1. BACK FLAP (Inside of envelope background) */
+        .envelope-back {
             position: absolute;
-            top: 0; left: 0; width: 0; height: 0;
-            border-left: 170px solid #f9dae0;
-            border-right: 170px solid #f9dae0;
-            border-bottom: 120px solid #f4cbd2;
-            border-top: 120px solid transparent;
-            z-index: 4; /* Keeps card hidden inside */
+            width: 100%;
+            height: 100%;
+            background: var(--envelope-inside);
+            z-index: 1;
             border-radius: 0 0 10px 10px;
-            pointer-events: none;
         }
 
-        /* Top Opening Flap */
-        .flap {
-            position: absolute;
-            top: 0; left: 0; width: 0; height: 0;
-            border-left: 170px solid transparent;
-            border-right: 170px solid transparent;
-            border-top: 130px solid var(--envelope-bg);
-            transform-origin: top;
-            z-index: 5; /* Starts on top of everything */
-            transition: transform 0.4s ease-in-out, z-index 0.2s ease-in-out;
-        }
-
-        /* Heart Seal */
-        .heart-seal {
-            position: absolute;
-            top: 110px;
-            left: 153px;
-            width: 34px;
-            height: 34px;
-            background-color: var(--btn-color);
-            transform: rotate(-45deg);
-            z-index: 6;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .heart-seal::before, .heart-seal::after {
-            content: "";
-            position: absolute;
-            width: 34px;
-            height: 34px;
-            background-color: var(--btn-color);
-            border-radius: 50%;
-        }
-        .heart-seal::before { top: -17px; left: 0; }
-        .heart-seal::after { left: 17px; top: 0; }
-
-        /* The Invitation Card (perfectly hidden initially) */
+        /* 2. THE INVITATION CARD (Starts deep inside, completely hidden) */
         .card-container {
             position: absolute;
-            top: 5px;
-            left: 15px;
-            width: 310px;
+            top: 15px;
+            left: 20px;
+            width: 300px;
             background: #fff;
             border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             overflow: hidden;
             text-align: center;
-            z-index: 2; /* Sits behind front flaps */
-            transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.1);
-            transform: translateY(0);
+            z-index: 2; /* Sits securely behind front pocket flaps */
+            transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+            transform: translateY(0) scale(0.95);
             pointer-events: none;
         }
 
@@ -122,7 +80,7 @@
         }
 
         .action-area {
-            padding: 15px 10px;
+            padding: 12px 10px;
             background: #fff8f9;
             border-top: 1px solid #f2d6db;
         }
@@ -139,7 +97,61 @@
             box-shadow: 0 4px 10px rgba(196,98,116,0.3);
         }
 
-        /* Instructional text */
+        /* 3. FRONT FRONT PACKET FLAPS (The solid foreground pockets) */
+        .envelope-front {
+            position: absolute;
+            width: 0;
+            height: 0;
+            top: 0;
+            left: 0;
+            border-left: 170px solid #f9dae0;
+            border-right: 170px solid #f9dae0;
+            border-bottom: 120px solid #f4cbd2;
+            border-top: 120px solid transparent;
+            z-index: 3; /* Blocks out the card from view completely */
+            border-radius: 0 0 10px 10px;
+            pointer-events: none;
+        }
+
+        /* 4. TOP OPENING FLAP */
+        .flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 170px solid transparent;
+            border-right: 170px solid transparent;
+            border-top: 130px solid var(--envelope-bg);
+            transform-origin: top;
+            z-index: 4; /* Sits above the pocket before opening */
+            transition: transform 0.5s ease, z-index 0.3s ease;
+        }
+
+        /* 5. HEART SEAL */
+        .heart-seal {
+            position: absolute;
+            top: 110px;
+            left: 153px;
+            width: 34px;
+            height: 34px;
+            background-color: var(--btn-color);
+            transform: rotate(-45deg);
+            z-index: 5;
+            transition: all 0.4s ease;
+        }
+        .heart-seal::before, .heart-seal::after {
+            content: "";
+            position: absolute;
+            width: 34px;
+            height: 34px;
+            background-color: var(--btn-color);
+            border-radius: 50%;
+        }
+        .heart-seal::before { top: -17px; left: 0; }
+        .heart-seal::after { left: 17px; top: 0; }
+
+        /* Instructional Tap Prompt text */
         .tap-text {
             position: absolute;
             bottom: -45px;
@@ -157,10 +169,10 @@
             50% { transform: translateY(-5px); }
         }
 
-        /* --- ANIMATION ACTIONS WHEN OPENED --- */
+        /* --- ACTIVE OPEN STATE TRIGGER STYLES --- */
         .envelope-wrapper.open .flap {
             transform: rotateX(180deg);
-            z-index: 1; /* Moves behind the envelope body */
+            z-index: 1; /* Drops cleanly behind everything */
         }
 
         .envelope-wrapper.open .heart-seal {
@@ -169,9 +181,13 @@
         }
 
         .envelope-wrapper.open .card-container {
-            transform: translateY(-290px); /* Lifts all the way up */
-            z-index: 10; /* Pops out on top of everything */
+            transform: translateY(-380px) scale(1.1); /* Slides gracefully out the top */
+            z-index: 10; /* Pops forward above everything else */
             pointer-events: auto;
+        }
+
+        .envelope-wrapper.open {
+            transform: translateY(80px);
         }
 
         .envelope-wrapper.open .tap-text {
@@ -182,13 +198,15 @@
 <body>
 
     <div class="container">
-        <!-- Clickable Envelope Wrapper -->
+        <!-- Interactive Combined Wrapper -->
         <div class="envelope-wrapper" id="envelope" onclick="openEnvelope()">
+            <div class="envelope-back"></div>
             <div class="flap"></div>
+            <div class="envelope-front"></div>
             <div class="heart-seal"></div>
             <div class="tap-text">✉️ Tap to open invitation</div>
 
-            <!-- Invitation Card -->
+            <!-- Inner Hidden Card Layout Section -->
             <div class="card-container" onclick="event.stopPropagation();">
                 <a href="https://www.google.com/maps/search/?api=1&query=Bidyadharpur+Puja+Mandap+Cuttack" target="_blank">
                     <img src="watermarked_img_10522389305830531999.png" alt="Invitation" class="invitation-img">
