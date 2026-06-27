@@ -20,7 +20,6 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow: hidden;
         }
 
         .container {
@@ -33,20 +32,25 @@
             box-sizing: border-box;
         }
 
-        /* The overall envelope wrapper */
+        /* Outer Frame to clip the card inside the bottom half */
         .envelope-wrapper {
             position: relative;
             width: 340px;
             height: 240px;
-            background-color: var(--envelope-inside);
-            border-radius: 0 0 10px 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             cursor: pointer;
-            transition: transform 0.6s ease;
-            margin-top: 240px; /* Gives plenty of room for card to slide up */
+            margin-top: 240px;
         }
 
-        /* 1. BACK FLAP (Inside of envelope background) */
+        /* A solid masking block that prevents anything from sticking out the bottom */
+        .mask-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            overflow: visible; /* Allows the card to rise up top, but masks layers */
+        }
+
         .envelope-back {
             position: absolute;
             width: 100%;
@@ -54,12 +58,13 @@
             background: var(--envelope-inside);
             z-index: 1;
             border-radius: 0 0 10px 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         }
 
-        /* 2. THE INVITATION CARD (Starts deep inside, completely hidden) */
+        /* THE INVITATION CARD (Starts hidden, tucked down safely) */
         .card-container {
             position: absolute;
-            top: 15px;
+            top: 0;
             left: 20px;
             width: 300px;
             background: #fff;
@@ -67,10 +72,11 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             overflow: hidden;
             text-align: center;
-            z-index: 2; /* Sits securely behind front pocket flaps */
-            transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
-            transform: translateY(0) scale(0.95);
+            z-index: 2;
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+            transform: translateY(10px); /* Pushed completely down into the pouch */
             pointer-events: none;
+            opacity: 0; /* Keeps it unseen until opened */
         }
 
         .invitation-img {
@@ -94,10 +100,9 @@
             font-weight: bold;
             padding: 10px 20px;
             border-radius: 25px;
-            box-shadow: 0 4px 10px rgba(196,98,116,0.3);
         }
 
-        /* 3. FRONT FRONT PACKET FLAPS (The solid foreground pockets) */
+        /* FRONT DESIGN FLAPS */
         .envelope-front {
             position: absolute;
             width: 0;
@@ -108,12 +113,12 @@
             border-right: 170px solid #f9dae0;
             border-bottom: 120px solid #f4cbd2;
             border-top: 120px solid transparent;
-            z-index: 3; /* Blocks out the card from view completely */
+            z-index: 4; /* Higher than the card container */
             border-radius: 0 0 10px 10px;
             pointer-events: none;
         }
 
-        /* 4. TOP OPENING FLAP */
+        /* TOP SEAL FLAP */
         .flap {
             position: absolute;
             top: 0;
@@ -124,11 +129,11 @@
             border-right: 170px solid transparent;
             border-top: 130px solid var(--envelope-bg);
             transform-origin: top;
-            z-index: 4; /* Sits above the pocket before opening */
-            transition: transform 0.5s ease, z-index 0.3s ease;
+            z-index: 5;
+            transition: transform 0.4s ease, z-index 0.2s ease;
         }
 
-        /* 5. HEART SEAL */
+        /* HEART STICKER */
         .heart-seal {
             position: absolute;
             top: 110px;
@@ -137,8 +142,8 @@
             height: 34px;
             background-color: var(--btn-color);
             transform: rotate(-45deg);
-            z-index: 5;
-            transition: all 0.4s ease;
+            z-index: 6;
+            transition: all 0.3s ease;
         }
         .heart-seal::before, .heart-seal::after {
             content: "";
@@ -151,7 +156,6 @@
         .heart-seal::before { top: -17px; left: 0; }
         .heart-seal::after { left: 17px; top: 0; }
 
-        /* Instructional Tap Prompt text */
         .tap-text {
             position: absolute;
             bottom: -45px;
@@ -160,34 +164,25 @@
             color: var(--btn-color);
             font-weight: bold;
             font-size: 15px;
-            animation: bounce 1.5s infinite;
             z-index: 10;
         }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-
-        /* --- ACTIVE OPEN STATE TRIGGER STYLES --- */
+        /* --- CLICKED TRANSFORMS --- */
         .envelope-wrapper.open .flap {
             transform: rotateX(180deg);
-            z-index: 1; /* Drops cleanly behind everything */
+            z-index: 1;
         }
 
         .envelope-wrapper.open .heart-seal {
             opacity: 0;
-            transform: scale(0) rotate(-45deg);
+            transform: scale(0);
         }
 
         .envelope-wrapper.open .card-container {
-            transform: translateY(-380px) scale(1.1); /* Slides gracefully out the top */
-            z-index: 10; /* Pops forward above everything else */
+            transform: translateY(-390px) scale(1.05); /* Slides upward gracefully */
+            z-index: 10;
             pointer-events: auto;
-        }
-
-        .envelope-wrapper.open {
-            transform: translateY(80px);
+            opacity: 1;
         }
 
         .envelope-wrapper.open .tap-text {
@@ -198,21 +193,22 @@
 <body>
 
     <div class="container">
-        <!-- Interactive Combined Wrapper -->
         <div class="envelope-wrapper" id="envelope" onclick="openEnvelope()">
-            <div class="envelope-back"></div>
-            <div class="flap"></div>
-            <div class="envelope-front"></div>
-            <div class="heart-seal"></div>
-            <div class="tap-text">✉️ Tap to open invitation</div>
+            <div class="mask-layer">
+                <div class="envelope-back"></div>
+                <div class="flap"></div>
+                <div class="envelope-front"></div>
+                <div class="heart-seal"></div>
+                <div class="tap-text">✉️ Tap to open invitation</div>
 
-            <!-- Inner Hidden Card Layout Section -->
-            <div class="card-container" onclick="event.stopPropagation();">
-                <a href="https://www.google.com/maps/search/?api=1&query=Bidyadharpur+Puja+Mandap+Cuttack" target="_blank">
-                    <img src="watermarked_img_10522389305830531999.png" alt="Invitation" class="invitation-img">
-                </a>
-                <div class="action-area">
-                    <a href="https://www.google.com/maps/search/?api=1&query=Bidyadharpur+Puja+Mandap+Cuttack" target="_blank" class="btn">📍 Open Google Maps</a>
+                <!-- Invitation Pouch Contents -->
+                <div class="card-container" onclick="event.stopPropagation();">
+                    <a href="https://www.google.com/maps/search/?api=1&query=Bidyadharpur+Puja+Mandap+Cuttack" target="_blank">
+                        <img src="watermarked_img_10522389305830531999.png" alt="Invitation" class="invitation-img">
+                    </a>
+                    <div class="action-area">
+                        <a href="https://www.google.com/maps/search/?api=1&query=Bidyadharpur+Puja+Mandap+Cuttack" target="_blank" class="btn">📍 Open Google Maps</a>
+                    </div>
                 </div>
             </div>
         </div>
