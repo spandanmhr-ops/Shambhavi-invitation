@@ -8,7 +8,7 @@
         :root {
             --bg-color: #f7e6e9;
             --envelope-bg: #f2cbd2;
-            --envelope-shadow: #e0a3ad;
+            --envelope-inside: #e0a3ad;
             --btn-color: #c46274;
         }
 
@@ -24,20 +24,31 @@
             perspective: 1000px;
         }
 
-        /* Envelope Wrapper */
+        /* Main Container to organize layout spacing */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Envelope Container */
         .envelope-wrapper {
             position: relative;
             width: 340px;
             height: 240px;
-            background-color: var(--envelope-bg);
+            background-color: var(--envelope-inside);
             border-radius: 0 0 10px 10px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             cursor: pointer;
             transition: transform 0.5s ease;
-            margin-top: 50px;
+            margin-top: 150px; /* Space for the card to rise up */
         }
 
-        /* Front Envelope Flaps Layout */
+        /* Bottom & Side Flaps (Keeps the card hidden behind it) */
         .envelope-wrapper::before {
             content: "";
             position: absolute;
@@ -46,7 +57,7 @@
             border-right: 170px solid #f9dae0;
             border-bottom: 120px solid #f4cbd2;
             border-top: 120px solid transparent;
-            z-index: 3;
+            z-index: 4; /* Keeps card hidden inside */
             border-radius: 0 0 10px 10px;
             pointer-events: none;
         }
@@ -59,8 +70,8 @@
             border-right: 170px solid transparent;
             border-top: 130px solid var(--envelope-bg);
             transform-origin: top;
-            z-index: 4;
-            transition: transform 0.4s ease-in-out;
+            z-index: 5; /* Starts on top of everything */
+            transition: transform 0.4s ease-in-out, z-index 0.2s ease-in-out;
         }
 
         /* Heart Seal */
@@ -72,7 +83,7 @@
             height: 34px;
             background-color: var(--btn-color);
             transform: rotate(-45deg);
-            z-index: 5;
+            z-index: 6;
             transition: all 0.3s ease;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
@@ -87,10 +98,10 @@
         .heart-seal::before { top: -17px; left: 0; }
         .heart-seal::after { left: 17px; top: 0; }
 
-        /* The Hidden Invitation Card */
+        /* The Invitation Card (perfectly hidden initially) */
         .card-container {
             position: absolute;
-            top: 10px;
+            top: 5px;
             left: 15px;
             width: 310px;
             background: #fff;
@@ -98,8 +109,8 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             overflow: hidden;
             text-align: center;
-            z-index: 2;
-            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 2; /* Sits behind front flaps */
+            transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.1);
             transform: translateY(0);
             pointer-events: none;
         }
@@ -128,10 +139,28 @@
             box-shadow: 0 4px 10px rgba(196,98,116,0.3);
         }
 
-        /* --- ANIMATION ACTIONS WHEN CLICKED --- */
+        /* Instructional text */
+        .tap-text {
+            position: absolute;
+            bottom: -45px;
+            width: 100%;
+            text-align: center;
+            color: var(--btn-color);
+            font-weight: bold;
+            font-size: 15px;
+            animation: bounce 1.5s infinite;
+            z-index: 10;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* --- ANIMATION ACTIONS WHEN OPENED --- */
         .envelope-wrapper.open .flap {
             transform: rotateX(180deg);
-            z-index: 1;
+            z-index: 1; /* Moves behind the envelope body */
         }
 
         .envelope-wrapper.open .heart-seal {
@@ -140,49 +169,33 @@
         }
 
         .envelope-wrapper.open .card-container {
-            transform: translateY(-260px) scale(1.08);
-            z-index: 10;
+            transform: translateY(-290px); /* Lifts all the way up */
+            z-index: 10; /* Pops out on top of everything */
             pointer-events: auto;
         }
 
-        .envelope-wrapper.open {
-            transform: translateY(100px);
-            cursor: default;
-        }
-
-        /* Quick instructional text animation */
-        .tap-text {
-            position: absolute;
-            bottom: -40px;
-            width: 100%;
-            text-align: center;
-            color: var(--btn-color);
-            font-weight: bold;
-            font-size: 14px;
-            animation: bounce 1.5s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
+        .envelope-wrapper.open .tap-text {
+            display: none;
         }
     </style>
 </head>
 <body>
 
-    <!-- Clickable Envelope Container -->
-    <div class="envelope-wrapper" id="envelope" onclick="openEnvelope()">
-        <div class="flap"></div>
-        <div class="heart-seal"></div>
-        <div class="tap-text">✉️ Tap to open invitation</div>
+    <div class="container">
+        <!-- Clickable Envelope Wrapper -->
+        <div class="envelope-wrapper" id="envelope" onclick="openEnvelope()">
+            <div class="flap"></div>
+            <div class="heart-seal"></div>
+            <div class="tap-text">✉️ Tap to open invitation</div>
 
-        <!-- Inner Invitation Card (slides out) -->
-        <div class="card-container" onclick="event.stopPropagation();">
-            <a href="https://www.google.com/maps/search/?api=1&query=Bidyadharpur+Puja+Mandap+Cuttack" target="_blank">
-                <img src="watermarked_img_10522389305830531999.png" alt="Invitation" class="invitation-img">
-            </a>
-            <div class="action-area">
-                <a href="https://www.google.com/maps/search/?api=1&query=Bidyadharpur+Puja+Mandap+Cuttack" target="_blank" class="btn">📍 Open Google Maps</a>
+            <!-- Invitation Card -->
+            <div class="card-container" onclick="event.stopPropagation();">
+                <a href="https://www.google.com/maps/search/?api=1&query=Bidyadharpur+Puja+Mandap+Cuttack" target="_blank">
+                    <img src="watermarked_img_10522389305830531999.png" alt="Invitation" class="invitation-img">
+                </a>
+                <div class="action-area">
+                    <a href="https://www.google.com/maps/search/?api=1&query=Bidyadharpur+Puja+Mandap+Cuttack" target="_blank" class="btn">📍 Open Google Maps</a>
+                </div>
             </div>
         </div>
     </div>
