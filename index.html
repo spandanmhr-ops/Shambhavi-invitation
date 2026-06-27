@@ -184,8 +184,8 @@
 </head>
 <body>
 
-    <audio id="drumrollAudio" src="https://assets.mixkit.co/active_storage/sfx/2449/2449-84.wav" preload="auto"></audio>
-    <audio id="happyTuneAudio" src="https://assets.mixkit.co/active_storage/sfx/2017/2017-84.wav" preload="auto"></audio>
+    <audio id="drumrollAudio" src="https://upload.wikimedia.org/wikipedia/commons/e/ec/Snare_drum_roll.ogg" preload="auto"></audio>
+    <audio id="happyTuneAudio" src="https://upload.wikimedia.org/wikipedia/commons/d/db/Magic_Chime.wav" preload="auto"></audio>
 
     <div class="container">
         <div class="envelope-wrapper" id="envelope" onclick="openEnvelope()">
@@ -209,23 +209,20 @@
     <script>
         function openEnvelope() {
             const envelope = document.getElementById('envelope');
-            
-            // Avoid triggering multiple times if already open
             if (envelope.classList.contains('open')) return;
 
             const drumroll = document.getElementById('drumrollAudio');
             const happyTune = document.getElementById('happyTuneAudio');
 
-            // 1. Play the drum roll instantly upon tapping
-            drumroll.play().catch(error => console.log("Audio play blocked by browser:", error));
+            // Play snare roll instantly on tap
+            drumroll.play().catch(err => console.log("Audio play blocked:", err));
 
-            // 2. Trigger the visual CSS open animation sequence
             envelope.classList.add('open');
 
-            // 3. Wait 750 milliseconds (exactly when the card reaches its top peak) to play the joyful chime tune
+            // Trigger sparkle magic chime tune 500ms into slide animation
             setTimeout(() => {
-                happyTune.play().catch(error => console.log("Audio play blocked by browser:", error));
-            }, 750);
+                happyTune.play().catch(err => console.log("Audio play blocked:", err));
+            }, 500);
         }
     </script>
 
