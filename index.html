@@ -29,17 +29,57 @@
 
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #f7e6e9 0%, #fcedf0 100%);
+            /* Beautiful new multi-tonal bright celebratory pink/gold gradient aura */
+            background: radial-gradient(circle at center, #fff5f6 0%, #fcedf0 60%, #f4cbd2 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
         }
 
-        /* Darker, more prominent ambient floating particles */
+        /* LIVELY: Huge, soft festive mandala gears rotating slowly in the background corner */
+        .bg-pattern-left, .bg-pattern-right {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border: 2px dashed rgba(196, 98, 116, 0.08);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .bg-pattern-left {
+            top: -200px; left: -200px;
+            animation: slowRotate 45s infinite linear;
+        }
+        .bg-pattern-right {
+            bottom: -200px; right: -200px;
+            animation: slowRotateReverse 55s infinite linear;
+        }
+        .bg-pattern-left::before, .bg-pattern-right::before {
+            content: "🌸 🌟 🌸 🌟 🌸 🌟 🌸 🌟";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            letter-spacing: 40px;
+            opacity: 0.15;
+        }
+
+        @keyframes slowRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes slowRotateReverse {
+            0% { transform: rotate(360deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        /* Sparkly floating orbs */
         .bg-sparkle {
             position: absolute;
-            background: rgba(196, 98, 116, 0.45); /* Made darker and matched to button theme */
+            background: rgba(196, 98, 116, 0.45);
             border-radius: 50%;
             pointer-events: none;
             animation: floatUp 9s infinite linear;
@@ -251,6 +291,9 @@
 </head>
 <body>
 
+    <div class="bg-pattern-left"></div>
+    <div class="bg-pattern-right"></div>
+
     <div class="container">
         <div class="envelope-wrapper" id="envelope" onclick="openEnvelope()">
             <div class="envelope-back"></div>
@@ -276,9 +319,8 @@
 
     <script>
         window.addEventListener('DOMContentLoaded', () => {
-            // Updated bubble floaters to use a more prominent tone palette
             const colors = ['#c46274', '#e0a3ad', '#b34e60', '#f4cbd2'];
-            for (let i = 0; i < 14; i++) {
+            for (let i = 0; i < 15; i++) {
                 const particle = document.createElement('div');
                 particle.classList.add('bg-sparkle');
                 const size = Math.random() * 14 + 7;
