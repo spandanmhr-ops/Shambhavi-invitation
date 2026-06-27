@@ -36,19 +36,21 @@
             position: relative;
         }
 
+        /* Darker, more prominent ambient floating particles */
         .bg-sparkle {
             position: absolute;
-            background: rgba(244, 162, 97, 0.25);
+            background: rgba(196, 98, 116, 0.45); /* Made darker and matched to button theme */
             border-radius: 50%;
             pointer-events: none;
-            animation: floatUp 8s infinite linear;
+            animation: floatUp 9s infinite linear;
             z-index: 1;
         }
 
         @keyframes floatUp {
-            0% { transform: translateY(105vh) scale(0.5); opacity: 0; }
-            50% { opacity: 0.6; }
-            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+            0% { transform: translateY(105vh) scale(0.4); opacity: 0; }
+            30% { opacity: 0.7; }
+            80% { opacity: 0.7; }
+            100% { transform: translateY(-10vh) scale(1.3); opacity: 0; }
         }
 
         .container {
@@ -83,7 +85,6 @@
             box-shadow: 0 15px 35px rgba(196,98,116,0.25);
         }
 
-        /* HARD LOCKED DOWN DEFAULT STATE: Hidden entirely from system rendering engines */
         .card-container {
             display: none; 
             position: absolute;
@@ -165,6 +166,7 @@
             z-index: 5;
             transition: all 0.3s ease;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            overflow: hidden;
         }
         .heart-seal::before, .heart-seal::after {
             content: "";
@@ -176,6 +178,24 @@
         }
         .heart-seal::before { top: -17px; left: 0; }
         .heart-seal::after { left: 17px; top: 0; }
+
+        .shimmer-line {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(to bottom right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.45) 50%, rgba(255,255,255,0) 100%);
+            transform: rotate(45deg);
+            animation: gleamTrack 3.5s infinite ease-in-out;
+            z-index: 6;
+            pointer-events: none;
+        }
+
+        @keyframes gleamTrack {
+            0% { transform: translate(-100%, -100%) rotate(45deg); }
+            100% { transform: translate(100%, 100%) rotate(45deg); }
+        }
 
         .tap-text {
             position: absolute;
@@ -194,7 +214,6 @@
             50% { transform: translateY(-6px); }
         }
 
-        /* --- STATE TRIGGER RUN CLASSES --- */
         .envelope-wrapper.open .flap {
             transform: rotateX(180deg);
             z-index: 1;
@@ -205,9 +224,8 @@
             transform: scale(0);
         }
 
-        /* Active styling applied explicitly via JavaScript timing logic */
         .envelope-wrapper.reveal-card .card-container {
-            display: block; /* Turn it on right when the flap pulls back */
+            display: block;
         }
 
         .envelope-wrapper.slide-card .card-container {
@@ -238,7 +256,11 @@
             <div class="envelope-back"></div>
             <div class="flap"></div>
             <div class="envelope-front"></div>
-            <div class="heart-seal"></div>
+            
+            <div class="heart-seal">
+                <div class="shimmer-line"></div>
+            </div>
+            
             <div class="tap-text">✉️ Tap to open invitation</div>
 
             <div class="card-container" id="invitationCard" onclick="event.stopPropagation();">
@@ -253,18 +275,18 @@
     </div>
 
     <script>
-        // Ambient background loops
         window.addEventListener('DOMContentLoaded', () => {
-            const colors = ['#f4cbd2', '#f9dae0', '#ffffff', '#fcdfd3'];
-            for (let i = 0; i < 12; i++) {
+            // Updated bubble floaters to use a more prominent tone palette
+            const colors = ['#c46274', '#e0a3ad', '#b34e60', '#f4cbd2'];
+            for (let i = 0; i < 14; i++) {
                 const particle = document.createElement('div');
                 particle.classList.add('bg-sparkle');
-                const size = Math.random() * 12 + 6;
+                const size = Math.random() * 14 + 7;
                 particle.style.width = size + 'px';
                 particle.style.height = size + 'px';
                 particle.style.left = Math.random() * 100 + 'vw';
-                particle.style.animationDelay = Math.random() * 5 + 's';
-                particle.style.animationDuration = Math.random() * 5 + 5 + 's';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = Math.random() * 5 + 6 + 's';
                 particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
                 document.body.appendChild(particle);
             }
@@ -274,14 +296,10 @@
             const envelope = document.getElementById('envelope');
             if (envelope.classList.contains('open')) return;
             
-            // 1. Instantly flip open envelope flap configuration 
             envelope.classList.add('open');
             
-            // 2. Wait 150ms for flap to swing halfway clear, then make card exist in HTML space safely out of sight
             setTimeout(() => {
                 envelope.classList.add('reveal-card');
-                
-                // 3. Immediately trigger upward physics transition glide frame
                 setTimeout(() => {
                     envelope.classList.add('slide-card');
                 }, 50);
