@@ -8,7 +8,7 @@
     <title>Shambhavi's Annaprashan Invitation</title>
     <meta property="og:title" content="Shambhavi's Annaprashan Invitation 🌸">
     <meta property="og:description" content="✉️ Tap to open your interactive invitation envelope and view the venue location!">
-    <meta property="og:image" content="https://spandanmhr-ops.github.io/Shambhavi-invitation/watermarked_img_10522389305830531999.png">
+    <meta property="og:image" content="https://spandanmhr-ops.github.io/Shambhavi-invitation/watermarked_img_10522389305830531999.jpg">
     <meta property="og:url" content="https://spandanmhr-ops.github.io/Shambhavi-invitation/">
     <meta property="og:type" content="website">
 
@@ -328,11 +328,11 @@
             var img = document.getElementById('inviteImg');
             
             // Forces the image request to always bypass internal storage tracks
-            img.src = "watermarked_img_10522389305830531999.png?cb=" + ts;
+            img.src = "watermarked_img_10522389305830531999.jpg?cb=" + ts;
             
             img.onerror = function() {
                 this.onerror = null;
-                this.src = "watermarked_img_10522389305830531999.PNG?cb=" + ts;
+                this.src = "watermarked_img_10522389305830531999.jpg?cb=" + ts;
             };
 
             const colors = ['#c46274', '#e0a3ad', '#b34e60', '#f4cbd2'];
